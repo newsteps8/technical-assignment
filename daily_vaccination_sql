@@ -1,0 +1,56 @@
+CREATE TABLE table1 AS
+    SELECT
+     country ,
+     date,
+     daily_vaccinations,
+     vaccines
+    FROM
+     country_vaccines_dataset
+    GROUP BY
+     country
+    HAVING
+    COUNT(*) == 1
+
+
+update table1
+set country_vaccines_dataset = b.impute_value
+from table1 a
+inner join (
+    select country, 0 as impute_value
+    from table1
+    group by country
+) b on a.country = b.country
+where country_vaccines_dataset is null;
+
+CREATE TABLE table2 AS
+    SELECT
+     country ,
+     date,
+     daily_vaccinations,
+     vaccines
+    FROM
+     country_vaccines_dataset
+    GROUP BY
+     country
+    HAVING
+    COUNT(*) > 1
+
+update table2
+set country_vaccines_dataset = b.median_country_vaccines_dataset
+from table2 a
+inner join (
+    select country, (SELECT PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY country_vaccines_dataset) OVER() FROM table1) as median_country_vaccines_dataset
+    from table2
+    group by country
+) b on a.country = b.country
+where country_vaccines_dataset is null;
+
+
+
+SELECT *
+  FROM table1
+
+ UNION ALL
+
+ SELECT *
+   FROM table2
