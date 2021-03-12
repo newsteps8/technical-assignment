@@ -6,4 +6,4 @@ WHERE
     Stats_Access_Link IS NOT NULL;
 
 
-SELECT * device_table;
+SELECT * FROM device_table;
