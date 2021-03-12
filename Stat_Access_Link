@@ -1,0 +1,9 @@
+UPDATE
+    device_table
+SET
+    Stats_Access_Link = LOWER(REPLACE(REPLACE(REPLACE(Stats_Access_Link, '<url>https://',''),'</url>',''),'<url>http://',''))
+WHERE
+    Stats_Access_Link IS NOT NULL;
+
+
+SELECT * device_table;
