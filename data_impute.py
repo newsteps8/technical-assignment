@@ -17,7 +17,5 @@ df= pd.concat(frames) # merge df1 and df2 updated dataframes
 print(df.head(5))
 
 
-df=df.loc[df['date'] == '1/6/2021']
-Total = df['daily_vaccinations'].sum()
-print(Total)
+
 
